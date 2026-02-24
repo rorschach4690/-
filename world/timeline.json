@@ -1,0 +1,124 @@
+[
+  {
+    "year": 2025,
+    "era": "前夜",
+    "events": [
+      {"domain": "tech", "event": "首批senolytics药物进入III期临床", "impact": "公众开始关注'抗衰老'概念"},
+      {"domain": "society", "event": "全球人口突破80亿", "impact": "老龄化成为发达国家核心议题"}
+    ]
+  },
+  {
+    "year": 2030,
+    "era": "前夜",
+    "events": [
+      {"domain": "tech", "event": "衰老细胞清除疗法获批用于特定疾病", "impact": "延寿从'幻想'变为'预期'"},
+      {"domain": "economy", "event": "抗衰老产业规模突破1万亿美元", "impact": "资本大规模涌入"},
+      {"domain": "politics", "event": "多国开始制定'寿命延长伦理指导框架'", "impact": "政治化开始"}
+    ]
+  },
+  {
+    "year": 2035,
+    "era": "曙光期",
+    "events": [
+      {"domain": "tech", "event": "表观遗传重编程在灵长类动物上实现10年生理逆转", "impact": "人体试验的压力骤增"},
+      {"domain": "society", "event": "'等得起'vs'等不起'的社会焦虑开始蔓延", "impact": "窗口期恐惧的雏形"}
+    ]
+  },
+  {
+    "year": 2038,
+    "era": "曙光期",
+    "events": [
+      {"domain": "tech", "event": "★ 首次人体逆转实验：受试者生理年龄回退约8年", "impact": "全球震动，被称为'2038事件'"},
+      {"domain": "politics", "event": "联合国紧急召开'生命技术伦理大会'", "impact": "各国立场分裂"},
+      {"domain": "society", "event": "首批'寿命移民'出现：人们向技术领先国家迁移", "impact": "新型移民潮"}
+    ]
+  },
+  {
+    "year": 2042,
+    "era": "分裂期",
+    "events": [
+      {"domain": "tech", "event": "LifeArc成立：三大生物技术集团合并", "impact": "技术垄断格局初步形成"},
+      {"domain": "society", "event": "首批精英阶层大规模接受延寿干预", "impact": "生命鸿沟正式出现"},
+      {"domain": "culture", "event": "自然主义运动兴起：'死亡是人的权利'", "impact": "文化分裂"}
+    ]
+  },
+  {
+    "year": 2045,
+    "era": "分裂期",
+    "events": [
+      {"domain": "tech", "event": "延寿干预商业化（百万美元级）", "impact": "精英可及"},
+      {"domain": "politics", "event": "首个国家将'延寿权'写入宪法（北欧某国）", "impact": "但实际覆盖不足10%人口"},
+      {"domain": "economy", "event": "ChronoBank成立：首个'生命时间'金融产品", "impact": "生命被证券化"}
+    ]
+  },
+  {
+    "year": 2050,
+    "era": "分裂期",
+    "events": [
+      {"domain": "society", "event": "★ '大关闭'（The Great Shutdown）：窗口期60+岁人群的窗口正式关闭", "impact": "约12亿人被永久排除。社会震荡。"},
+      {"domain": "politics", "event": "'窗口期难民'运动：被排除者要求赔偿和替代方案", "impact": "多国发生大规模抗议"},
+      {"domain": "culture", "event": "'告别仪式'文化兴起：为即将进入自然衰老的人举行仪式", "impact": "新的死亡文化"}
+    ]
+  },
+  {
+    "year": 2055,
+    "era": "重构期",
+    "events": [
+      {"domain": "politics", "event": "首批'延寿政治家'现象：掌权者不退休不死亡", "impact": "政治新陈代谢停滞"},
+      {"domain": "society", "event": "周期契约婚姻首次被法律承认", "impact": "家庭制度正式分裂"},
+      {"domain": "tech", "event": "神经可塑性维护技术突破：首批认知延寿方案", "impact": "最后一块拼图接近完成"}
+    ]
+  },
+  {
+    "year": 2060,
+    "era": "重构期",
+    "events": [
+      {"domain": "economy", "event": "AI自动化替代率突破50%", "impact": "大规模失业浪潮"},
+      {"domain": "society", "event": "首例'世界变灰'综合征公开报道", "impact": "长寿的心理代价开始显现"},
+      {"domain": "politics", "event": "南方联盟形成，要求'技术主权'和'数据赔偿'", "impact": "南北张力制度化"}
+    ]
+  },
+  {
+    "year": 2065,
+    "era": "重构期",
+    "events": [
+      {"domain": "tech", "event": "延寿干预成本降至十万美元级", "impact": "中产阶层可及"},
+      {"domain": "society", "event": "★ 社会化抚养制度在多国推行", "impact": "争议极大，被称为'第二次家庭革命'"},
+      {"domain": "economy", "event": "SoilNet成立：南方数据合作社", "impact": "南方对北方数据殖民的反击"}
+    ]
+  },
+  {
+    "year": 2075,
+    "era": "深水期",
+    "events": [
+      {"domain": "society", "event": "首批超长寿者（活130+年）出现严重身份危机", "impact": "'再生'文化和选择性死亡辩论出现"},
+      {"domain": "politics", "event": "多个技术边缘国家发生'寿命暴动'", "impact": "全球南方矛盾激化"},
+      {"domain": "tech", "event": "免疫债务现象首次被确认", "impact": "技术的不完美性浮现"}
+    ]
+  },
+  {
+    "year": 2085,
+    "era": "深水期",
+    "events": [
+      {"domain": "society", "event": "'裂缝'社区在多个大城市自发形成", "impact": "系统之外的另一种生活"},
+      {"domain": "politics", "event": "'全球生命公约'谈判启动", "impact": "试图建立延寿技术的国际分配框架"},
+      {"domain": "culture", "event": "虚无派成为重要文化力量", "impact": "'活多久都没意义'的声音"}
+    ]
+  },
+  {
+    "year": 2095,
+    "era": "当下",
+    "events": [
+      {"domain": "tech", "event": "延寿成本降至万元级，但窗口期限制不变", "impact": "普及在望，但历史欠账无法弥补"},
+      {"domain": "society", "event": "窗口遗弃者最后一代进入生命末期", "impact": "社会良知的最后考验"},
+      {"domain": "economy", "event": "关怀经济和意义经济超越制造业", "impact": "经济结构根本转型"}
+    ]
+  },
+  {
+    "year": 2100,
+    "era": "当下",
+    "events": [
+      {"domain": "all", "event": "★ 故事开始的世界", "impact": "一切矛盾都已成熟，一切张力都在极限。"}
+    ]
+  }
+]
