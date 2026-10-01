@@ -51,7 +51,7 @@ const LABEL_NUDGE = {
   gettier: [2.5, 0.2],
   goldman: [-2.9, 0.2],
   nozick: [2.7, 0.25],
-  williamson: [0.4, 0.9],
+  williamson: [2.8, 0.15],
   "russell-problems": [-2.5, 0.3],
   "russell-external": [2.5, 0.15],
   "carnap-aufbau": [0.2, 0.9],
@@ -263,7 +263,7 @@ function buildAxis() {
     el.querySelector(".bn").textContent = branch.name;
     el.querySelector(".bq").textContent = branch.hint;
     const obj = new CSS2DObject(el);
-    obj.position.set(branch.x, 24.1, 0);
+    obj.position.set(branch.x, 22.8, 0);
     scene.add(obj);
   }
 
