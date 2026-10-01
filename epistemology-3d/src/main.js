@@ -20,9 +20,26 @@ const branchesEl = document.getElementById("branches");
 const queryEl = document.getElementById("q");
 const resetBtn = document.getElementById("reset");
 
+const DEPTH = 1.15;
+const LABEL_NUDGE = {
+  plato: [0, 0.85],
+  descartes: [-3.1, 0.35],
+  locke: [3.0, -0.35],
+  berkeley: [-2.4, 0.15],
+  hume: [-2.7, 0.55],
+  kant: [2.1, 0.75],
+  gettier: [2.5, 0.2],
+  goldman: [-2.9, 0.2],
+  nozick: [2.7, 0.25],
+  williamson: [0.4, 0.9],
+  "russell-problems": [-2.5, 0.3],
+  "russell-external": [2.5, 0.15],
+  "carnap-aufbau": [0.2, 0.9],
+  sellars: [2.3, 0.35],
+};
 const HOME = {
-  pos: new THREE.Vector3(22, 16, 36),
-  target: new THREE.Vector3(0, 9.2, 0),
+  pos: new THREE.Vector3(22, 16.5, 29),
+  target: new THREE.Vector3(-1.2, 8, 0),
 };
 
 const state = {
@@ -41,7 +58,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x101216);
 scene.fog = new THREE.Fog(0x101216, 42, 96);
 
-const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 220);
 camera.position.copy(HOME.pos);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -59,8 +76,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(HOME.target);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.autoRotate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-controls.autoRotateSpeed = 0.45;
+controls.autoRotate = false;
 controls.minDistance = 6;
 controls.maxDistance = 80;
 controls.maxPolarAngle = Math.PI * 0.92;
@@ -74,10 +90,19 @@ const fill = new THREE.DirectionalLight(0x8ea4b8, 0.45);
 fill.position.set(-16, 8, -10);
 scene.add(fill);
 
+const grid = new THREE.GridHelper(54, 12, 0x3a4048, 0x2c3138);
+grid.position.y = -7.1;
+for (const material of [].concat(grid.material)) {
+  material.transparent = true;
+  material.opacity = 0.45;
+}
+scene.add(grid);
+
 const runtimeNodes = new Map();
 const runtimeEdges = [];
 const ladderMeshes = [];
 let ladderGroup;
+let ladderCaption;
 
 buildAxis();
 buildNodes();
@@ -144,6 +169,7 @@ window.addEventListener("keydown", (event) => {
 window.addEventListener("resize", resize);
 queryEl.addEventListener("input", () => {
   state.query = queryEl.value.trim();
+  state.selected = null;
   renderPanel();
 });
 resetBtn.addEventListener("click", () => {
@@ -191,8 +217,13 @@ function assignHeights(list) {
   for (const group of groups.values()) {
     group.sort((a, b) => a.y - b.y || a.year - b.year);
     for (let i = 1; i < group.length; i += 1) {
-      const min = group[i - 1].y + 1.32;
+      const min = group[i - 1].y + 1.05;
       if (group[i].y < min) group[i].y = min;
+    }
+    for (let i = 0; i < group.length; i += 1) {
+      const prevClose = i > 0 && group[i].y - group[i - 1].y < 3.4;
+      const nextClose = i < group.length - 1 && group[i + 1].y - group[i].y < 3.4;
+      group[i].labelSide = prevClose || nextClose ? (i % 2 === 0 ? -1 : 1) : 0;
     }
   }
 }
@@ -212,7 +243,7 @@ function buildAxis() {
     el.querySelector(".bn").textContent = branch.name;
     el.querySelector(".bq").textContent = branch.hint;
     const obj = new CSS2DObject(el);
-    obj.position.set(branch.x, top + 0.35, 0);
+    obj.position.set(branch.x, 24.1, 0);
     scene.add(obj);
   }
 
@@ -259,9 +290,13 @@ function buildNodes() {
       opacity: 1,
     });
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 20), material);
-    mesh.position.set(branch.x, node.y, node.z);
+    const displayZ = node.z * DEPTH;
+    mesh.position.set(branch.x, node.y, displayZ);
     mesh.userData.pick = node.id;
     scene.add(mesh);
+    if (Math.abs(displayZ) > 0.35) {
+      scene.add(line([branch.x, node.y, 0], [branch.x, node.y, displayZ], branch.color, 0.38));
+    }
 
     const el = document.createElement("div");
     el.className = "node-label";
@@ -270,8 +305,13 @@ function buildNodes() {
     inner.querySelector(".name").textContent = node.thinker;
     inner.querySelector(".sub").textContent = node.yearLabel;
     el.appendChild(inner);
+    const nudge = LABEL_NUDGE[node.id];
     const label = new CSS2DObject(el);
-    label.position.set(0, radius + 0.42, 0);
+    label.position.set(
+      nudge ? nudge[0] : (node.labelSide || 0) * 2.15,
+      nudge ? nudge[1] : node.labelSide ? 0.05 : radius + 0.55,
+      0,
+    );
     mesh.add(label);
 
     runtimeNodes.set(node.id, {
@@ -318,7 +358,6 @@ function buildEdges() {
 function buildLadder() {
   ladderGroup = new THREE.Group();
   ladderGroup.visible = false;
-  const baseY = 5.2;
   LADDER.forEach((step, index) => {
     const color = new THREE.Color().setHSL(0.1, 0.35, 0.45 + index * 0.04);
     const material = new THREE.MeshStandardMaterial({
@@ -330,12 +369,14 @@ function buildLadder() {
       transparent: true,
     });
     const mesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.28, 0), material);
-    mesh.position.set(11.5 + index * 0.18, baseY + index * 1.45, 5.2 + index * 0.42);
+    mesh.position.set(10.5, 3.4 + index * 1.55, 9 + index * 0.48);
     mesh.userData.pick = step.id;
+    mesh.visible = false;
     ladderGroup.add(mesh);
 
     const el = document.createElement("div");
     el.className = "ladder-label";
+    el.style.display = "none";
     el.innerHTML = `<div class="step"></div><div class="name"></div>`;
     el.querySelector(".step").textContent = String(index + 1).padStart(2, "0");
     el.querySelector(".name").textContent = step.name;
@@ -358,8 +399,10 @@ function buildLadder() {
   const caption = document.createElement("div");
   caption.className = "year-label";
   caption.textContent = "《构造》的上升阶梯";
+  caption.style.display = "none";
+  ladderCaption = caption;
   const captionObj = new CSS2DObject(caption);
-  captionObj.position.set(11.2, baseY - 0.9, 5);
+  captionObj.position.set(10.5, 2.35, 8.5);
   ladderGroup.add(captionObj);
   scene.add(ladderGroup);
 }
@@ -380,10 +423,8 @@ function renderModes() {
     btn.setAttribute("aria-pressed", String(state.mode === id));
     btn.addEventListener("click", () => {
       state.mode = id;
-      if (id === "ladder") {
-        const anchor = ladderMeshes[4].mesh.position;
-        flyTo(anchor.clone().add(new THREE.Vector3(0.5, 1.2, 14)), anchor);
-      }
+      state.selected = null;
+      if (id === "ladder") focusLadder();
       renderModes();
       renderPanel();
     });
@@ -400,6 +441,7 @@ function renderModes() {
     btn.setAttribute("aria-pressed", String(state.branch === branch.id));
     btn.addEventListener("click", () => {
       state.branch = branch.id;
+      state.selected = null;
       renderModes();
       renderPanel();
     });
@@ -428,7 +470,7 @@ function visuals() {
     }
   }
 
-  const ladderOn = state.mode === "ladder" || selected === "carnap-aufbau" || (selected && selected.startsWith("L"));
+  const ladderOn = state.mode === "ladder" || (selected && selected.startsWith("L"));
   ladderGroup.visible = ladderOn;
 
   for (const item of runtimeNodes.values()) {
@@ -436,7 +478,7 @@ function visuals() {
     if (!nodeActive(item.data)) target = 0;
     else if (selected && nodeOf[selected]) target = neighbors.has(item.data.id) ? 1 : 0.08;
     else if (state.mode === "spine") target = item.data.spine ? 1 : 0.14;
-    else if (state.mode === "ladder" && !selected) target = 0.16;
+    else if (state.mode === "ladder" && !selected) target = 0.07;
     if (hovered === item.data.id && target > 0) target = 1;
     item.target = target;
   }
@@ -474,7 +516,7 @@ function animate() {
     item.mesh.visible = material.opacity > 0.03;
     item.labelEl.style.opacity = String(Math.min(1, material.opacity * 1.15));
     const dist = camera.position.distanceTo(item.position);
-    const scale = THREE.MathUtils.clamp(18 / dist, 0.55, 1.15);
+    const scale = THREE.MathUtils.clamp(30 / dist, 0.82, 1.08);
     item.inner.style.transform = `scale(${scale})`;
     const grow = hovered === item.data.id ? 1.08 : 1;
     item.mesh.scale.setScalar(damp(item.mesh.scale.x, grow, 0.2));
@@ -487,8 +529,8 @@ function animate() {
 
   for (const item of ladderMeshes) {
     item.material.opacity = damp(item.material.opacity ?? 1, item.target, 0.16);
-    item.mesh.visible = ladderGroup.visible && item.material.opacity > 0.03;
-    item.labelEl.style.opacity = String(item.material.opacity);
+    item.mesh.visible = ladderGroup.visible;
+    item.labelEl.style.opacity = ladderGroup.visible ? "1" : "0";
   }
 
   if (state.selected && runtimeNodes.has(state.selected)) {
@@ -511,6 +553,10 @@ function animate() {
   }
 
   labels.render(scene, camera);
+  if (!ladderGroup.visible) {
+    for (const item of ladderMeshes) item.labelEl.style.display = "none";
+    if (ladderCaption) ladderCaption.style.display = "none";
+  }
   renderer.render(scene, camera);
 }
 
@@ -572,6 +618,17 @@ function bindPanel() {
       state.selected = id;
       const item = runtimeNodes.get(id);
       if (item) focusOn(item.position);
+      if (id.startsWith("L")) state.mode = "ladder";
+      renderModes();
+      renderPanel();
+    });
+  });
+  panel.querySelectorAll("[data-mode]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.mode = btn.getAttribute("data-mode");
+      state.selected = null;
+      if (state.mode === "ladder") focusLadder();
+      renderModes();
       renderPanel();
     });
   });
@@ -584,12 +641,21 @@ function bindPanel() {
   }
 }
 
+function focusLadder() {
+  const anchor = ladderMeshes[4].mesh.position;
+  flyTo(anchor.clone().add(new THREE.Vector3(7, 2.4, 13)), anchor.clone());
+}
+
 function homePanel() {
   const chain = SPINE.map((id) => {
     const node = nodeOf[id];
     return `<button type="button" data-open="${id}">${esc(node.thinker)}</button>`;
   });
   const chainHtml = `${chain.slice(0, 6).join(" → ")}<br />然后分成 ${chain[6]} 与 ${chain[7]}`;
+  const matches = state.query ? NODES.filter((node) => nodeActive(node)) : [];
+  const found = state.query
+    ? `<h3>搜索</h3><div class="chain">${matches.length ? matches.map((node) => `<button type="button" data-open="${node.id}">${esc(node.thinker)} · ${esc(node.work)}</button>`).join("<br />") : "没有对上的节点。"}</div>`
+    : "";
   return `
     <p class="year">怎么读</p>
     <h2>一张问题的地图</h2>
@@ -598,6 +664,7 @@ function homePanel() {
     <p class="chain">${chainHtml}</p>
     <h3>《构造》在做什么</h3>
     <p>从最基础的经验出发，用逻辑关系把日常对象、他人心灵和科学世界逐层搭出来。打开「构造阶梯」，或点开卡尔纳普。</p>
+    ${found}
   `;
 }
 
@@ -634,6 +701,7 @@ function personPanel(node) {
     <h3>放在哪</h3>
     <p>${esc(node.place)}</p>
     ${bridge}
+    ${node.id === "carnap-aufbau" ? `<p style="margin-top:14px"><button type="button" class="chip" data-mode="ladder">看构造阶梯</button></p>` : ""}
     <h3>上下游</h3>
     ${relHtml}
   `;

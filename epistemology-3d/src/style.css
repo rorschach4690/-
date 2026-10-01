@@ -226,11 +226,11 @@ button.chip:hover { border-color: rgba(231, 226, 214, 0.45); }
 footer#dock {
   position: absolute;
   left: 22px;
-  bottom: 16px;
-  width: min(720px, calc(100vw - 420px));
+  bottom: 14px;
+  width: min(780px, calc(100vw - 410px));
   color: var(--muted);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 #legend {
@@ -271,9 +271,9 @@ footer#dock {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
 }
 
-.node-label { text-align: center; transform-origin: center bottom; }
-.node-label .name { display: block; color: #f3efe4; font-size: 13px; letter-spacing: 0.06em; white-space: nowrap; }
-.node-label .sub { display: block; margin-top: 2px; color: #b7b1a4; font-size: 11px; letter-spacing: 0.04em; white-space: nowrap; }
+.node-label { text-align: center; transform-origin: center bottom; white-space: nowrap; }
+.node-label .name { color: #f3efe4; font-size: 13px; letter-spacing: 0.04em; }
+.node-label .sub { margin-left: 6px; color: #b7b1a4; font-size: 12px; letter-spacing: 0.04em; }
 
 .branch-label { width: 132px; text-align: center; }
 .branch-label .bn { color: #f3efe4; font-size: 13px; letter-spacing: 0.08em; }
