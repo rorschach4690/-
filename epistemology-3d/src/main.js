@@ -20,6 +20,26 @@ const branchesEl = document.getElementById("branches");
 const queryEl = document.getElementById("q");
 const resetBtn = document.getElementById("reset");
 
+const ENGLISH = {
+  plato: "Plato",
+  descartes: "Descartes",
+  locke: "Locke",
+  berkeley: "Berkeley",
+  hume: "Hume",
+  kant: "Kant",
+  mach: "Mach",
+  husserl: "Husserl",
+  "russell-problems": "Russell",
+  "russell-external": "Russell",
+  "carnap-aufbau": "Carnap",
+  "carnap-syntax": "Carnap",
+  quine: "Quine",
+  sellars: "Sellars",
+  gettier: "Gettier",
+  goldman: "Goldman",
+  nozick: "Nozick",
+  williamson: "Williamson",
+};
 const DEPTH = 1.15;
 const LABEL_NUDGE = {
   plato: [0, 0.85],
@@ -453,7 +473,7 @@ function nodeActive(node) {
   if (state.branch !== "all" && node.branch !== state.branch) return false;
   if (state.mode === "core" && node.tier !== "core") return false;
   if (state.query) {
-    const blob = `${node.thinker}${node.work}${node.original}${node.claim}`;
+    const blob = `${node.thinker} ${node.work} ${node.original} ${node.claim} ${ENGLISH[node.id] || ""}`;
     if (!blob.toLowerCase().includes(state.query.toLowerCase())) return false;
   }
   return true;
