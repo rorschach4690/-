@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>认识论 · 三维知识网络</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="view"></div>
+    <div id="ui">
+      <header>
+        <p class="eyebrow">哲学 · 认识论</p>
+        <h1>三维知识网络</h1>
+        <p class="lead">拖拽旋转，滚轮缩放，右键平移。单击节点看它在问题链上的位置，双击把镜头推近。</p>
+        <label class="search">
+          <span>搜索</span>
+          <input id="q" type="search" placeholder="人物或著作" autocomplete="off" />
+        </label>
+      </header>
+      <aside id="panel"></aside>
+      <footer id="dock">
+        <div id="modes" class="row"></div>
+        <div id="branches" class="row wrap"></div>
+        <div id="legend">
+          <div><i class="swatch gold"></i>金色粗线 · 最短阅读链</div>
+          <div><i class="swatch red"></i>红色 · 批判</div>
+          <div><i class="swatch sand"></i>沙色 · 同一问题的延续</div>
+          <div><i class="swatch mist"></i>灰线 · 推进或回应</div>
+          <div class="axes">横轴是问题，纵轴是年代。节点离开中线的距离是纵深：往后是怀疑和分叉，往前是理论与批判。</div>
+          <button id="reset" type="button">复位镜头</button>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
